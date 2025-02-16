@@ -8,16 +8,17 @@ const UserRoutes = require('./routes/index');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
+
+
 app.use('/api',UserRoutes);
-//app.use(express.json());
+
 
 function prepareAndStartServer() {
 
-
-    //app.use(bodyParser);
-
     app.listen(PORT,()=>{
         console.log(`Server Started at ${PORT}`);
+       
     })
+
 }
 prepareAndStartServer();

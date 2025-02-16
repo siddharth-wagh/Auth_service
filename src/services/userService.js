@@ -1,5 +1,6 @@
 const {UserRepository} = require('../repository/user-repository');
-
+const {JWT_KEY} = require('../config/serverConfig');
+const jwt = require('JSONWEBTOKEN');
 class UserServices {
     constructor() {
         this.userRepository = new UserRepository();
@@ -23,6 +24,30 @@ class UserServices {
             console.log("Error in user user services");
             return error;
         }
+    }
+
+    createToken(user) {
+        try {
+            const token = jwt.sign(user,JWT_KEY,{expiresIn:"1d"});
+            return token;
+
+        } catch (error) {
+            console.log("Error in Create token");
+            throw error;
+        }
+    }
+
+    verifyToken(token) {
+        
+        try {
+            const response = jwt.verify(token,JWT_KEY);
+            return response;
+
+        } catch (error) {
+            console.log("Error in Verify token");
+            throw error;
+        }
+    
     }
 }
 
