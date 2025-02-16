@@ -17,7 +17,7 @@ const create = async (req,res) => {
         console.log(error);
         return res.status(500).json({
             data:{},
-            message:"unable to created a user",
+            message:"unable to created a user", 
             success:false,
             err:error
         })
@@ -29,7 +29,7 @@ const create = async (req,res) => {
 const signin = async (req,res) => {
     try {
         const user = await userServices.signin(req.body.email,req.body.password);
-        return res.status(201).json({
+        return res.status(200).json({
             data:user,
             message:"successfully signedin",
             success:true,
@@ -45,7 +45,31 @@ const signin = async (req,res) => {
         })
     }
 }
+
+const isAuthenticated = async (req,res) => {
+    
+    try {
+        const token = req.headers['x-access-token']
+        const response = await userServices.isAuthenticated(token);
+    
+        return res.status(200).json({
+            data:response,
+            message:"User authenticated and token is valid ",
+            success:true,
+            err:{}
+        })
+    } catch (error) {
+        return res.status(500).json({
+            data:{},
+            success:true,
+            message:"Unable to autenticate the user",
+            err:error
+
+        })
+    }
+}
 module.exports = {
     create,
-    signin
+    signin,
+    isAuthenticated
 }

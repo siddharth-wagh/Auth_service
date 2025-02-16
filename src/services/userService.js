@@ -40,11 +40,24 @@ class UserServices {
         }
 
         //step3 -> if passwords match return jwt token
-        const newJWT = this.createToken({email:user.email,password:user.password});
+        const newJWT = this.createToken({email:user.email,id:user.id});
         return newJWT;
     }
 
 
+    async isAuthenticated(token) {
+        const response = this.verifyToken(token);
+        if(!response) {
+            throw {error:"Token is invalid"};
+        }
+      
+        const user = await this.userRepository.getById(response.id);
+        if(!user) {
+            throw {error:"User doesnt exist"};
+        }
+   
+        return user.id;
+    }
     createToken(user) {
         try {
             const token = jwt.sign(user,JWT_KEY,{expiresIn:"1d"});
