@@ -13,8 +13,8 @@ class UserServices {
             const user =await this.userRepository.create(data);
             return user;
         } catch (error) {
-            console.log("Error in user user services");
-            return error;
+            console.log("Error in create user services");
+            throw error;
         }
     }
 
@@ -24,7 +24,7 @@ class UserServices {
             return response;
         } catch (error) {
             console.log("Error in user user services");
-            return error;
+            throw error;
         }
     }
 

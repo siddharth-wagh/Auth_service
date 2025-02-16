@@ -3,7 +3,6 @@ const {UserServices} = require('../services/userService');
 const userServices = new UserServices();
 const create = async (req,res) => {
     try {
-        
         const user = await userServices.create({
             email:req.body.email,
             password:req.body.password
