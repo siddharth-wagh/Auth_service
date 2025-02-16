@@ -15,7 +15,7 @@ class UserRepository {
 
     async destroy(UserId) {
         try {
-            await City.destroy({
+            await User.destroy({
                 where:{
                     id:UserId
                 }
@@ -23,6 +23,31 @@ class UserRepository {
             return true;
         } catch (error) {
             console.log("Error in user-repo");
+            throw error;
+        }
+    }
+
+    async getById(userId) {
+        try {
+            const user = await User.findByPk(userId,{
+                attributes:['email','id']
+            })
+            return user;
+        } catch (error) {
+            console.log("Error in user-repo");
+            throw error;
+        }
+    }
+
+    async getUserByEmail(userEmail) {
+        try {
+          
+            const user = await User.findOne({
+                where:{email:userEmail}
+            })
+            return user;
+        } catch (error) {
+            console.log("Error in user-repo in getuserbyemail");
             throw error;
         }
     }

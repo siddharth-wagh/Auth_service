@@ -18,15 +18,32 @@ class UserServices {
         }
     }
 
-    async destroy(cityId) {
+    async destroy(userId) {
         try {
-            const response =await this.userRepository.destroy(cityId);
+            const response =await this.userRepository.destroy(userId);
             return response;
         } catch (error) {
             console.log("Error in user user services");
             return error;
         }
     }
+
+    async signin(email,password) {
+        //step 1 -> fetch the user using the password
+        const user = await this.userRepository.getUserByEmail(email);
+        //step 2 -> compare incoming plane password with the users hashed password
+        const passwordsMatched = this.comparePassword(password,user.password);
+        
+        if(!passwordsMatched) {
+            console.log('Password doesnt match');
+            throw {error:'Wrong password'};
+        }
+
+        //step3 -> if passwords match return jwt token
+        const newJWT = this.createToken({email:user.email,password:user.password});
+        return newJWT;
+    }
+
 
     createToken(user) {
         try {
