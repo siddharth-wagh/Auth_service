@@ -1,4 +1,4 @@
-const {User} = require('../models/index');
+const {User,Role} = require('../models/index');
 
 class UserRepository {
 
@@ -50,6 +50,27 @@ class UserRepository {
             console.log("Error in user-repo in getuserbyemail");
             throw error;
         }
+    }
+
+    async isAdmin(userId) {
+        try{
+            const user = await User.findByPk(userId);
+            const role = await Role.findOne({
+                where:{
+                    name:"ADMIN"
+                }
+            });
+            if(!user) {
+                throw {error:'User Not found'};
+            }
+            const response = await user.hasRole(role);
+            return response;
+        }
+        catch (error) {
+            console.log("something wrong in repo ");
+            throw error;
+        }
+       
     }
 }
 

@@ -1,6 +1,6 @@
 const {UserRepository} = require('../repository/user-repository');
 const {JWT_KEY} = require('../config/serverConfig');
-const jwt = require('JSONWEBTOKEN');
+//const jwt = require('JSONWEBTOKEN');
 
 const bcrypt = require('bcrypt');
 class UserServices {
@@ -57,6 +57,17 @@ class UserServices {
         }
    
         return user.id;
+    }
+
+    async isAdmin(userId) {
+        try {
+            const response =  await this.userRepository.isAdmin(userId);
+            console.log(response);
+            return response;
+        } catch (error) {
+            console.log("Something wrong in service layer");
+            throw error;
+        }
     }
     createToken(user) {
         try {

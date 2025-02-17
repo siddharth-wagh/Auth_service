@@ -31,6 +31,21 @@ const ValidateUserAuth = async (req,res,next) => {
 
     next();
 }
+
+const ValidateAdminreq = (req,res,next) => {
+    if(!req.body.id) {
+        return res.status(400).json({
+            data:{},
+            message:"Something went wrong",
+            success:false,
+            error:'User id not found'
+        })
+    }
+
+    next();
+}
 module.exports = {
-    ValidateUserAuth
+    ValidateUserAuth,
+    ValidateAdminreq
+    
 }
