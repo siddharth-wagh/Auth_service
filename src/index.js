@@ -24,7 +24,6 @@ async function prepareAndStartServer() {
         db.sequelize.sync({alter:true});
     }
 
-   
 
 }
 prepareAndStartServer();
