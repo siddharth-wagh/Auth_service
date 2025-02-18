@@ -1,8 +1,12 @@
 const {UserRepository} = require('../repository/user-repository');
 const {JWT_KEY} = require('../config/serverConfig');
-//const jwt = require('JSONWEBTOKEN');
-
+const jwt = require('JSONWEBTOKEN');
+const ClientError = require('../utils/client-error');
 const bcrypt = require('bcrypt');
+const { StatusCodes } = require('http-status-codes');
+
+
+
 class UserServices {
     constructor() {
         this.userRepository = new UserRepository();
@@ -33,19 +37,30 @@ class UserServices {
     }
 
     async signin(email,password) {
-        //step 1 -> fetch the user using the password
-        const user = await this.userRepository.getUserByEmail(email);
-        //step 2 -> compare incoming plane password with the users hashed password
-        const passwordsMatched = this.comparePassword(password,user.password);
-        
-        if(!passwordsMatched) {
-            console.log('Password doesnt match');
-            throw {error:'Wrong password'};
-        }
+        try{
+                //step 1 -> fetch the user using the password
+            const user = await this.userRepository.getUserByEmail(email);
+            //step 2 -> compare incoming plane password with the users hashed password
+            
+            const passwordsMatched = this.comparePassword(password,user.password);
+            
+            if(!passwordsMatched) {
+                console.log('Password doesnt match');
+                throw new ClientError('IncorrectPassword',"Invalid password","The password is incorrect",StatusCodes.BAD_REQUEST);
+            }
 
-        //step3 -> if passwords match return jwt token
-        const newJWT = this.createToken({email:user.email,id:user.id});
-        return newJWT;
+            //step3 -> if passwords match return jwt token
+            const newJWT = this.createToken({email:user.email,id:user.id});
+            return newJWT;
+        } catch(error) {
+            if(error.name=="AttributeNotFound")
+            {
+                throw error;
+            }
+            console.log("In signin in service layer ",error);
+            throw error;
+        }
+       
     }
 
 
